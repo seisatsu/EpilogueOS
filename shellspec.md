@@ -44,7 +44,7 @@ Persistent environment variables are for device configuration, and last between 
 * (lsr [path]) : List the contents of the given or current path recursively.
 * (cd [path]) : Change directory. Can take a full or relative path. If path is ommitted, change to configured default root directory.
 * (pwd) : Return the current working directory.
-* (env [variable] [value]) : List persistent environment variables stored in /#0/.ENV, or just return the value of the selected persistent environment variable. Or, if variable and value are both given, set the variable to the new value and return it.
+* (env [variable] [value]) : List persistent environment variables stored in /#0/, or just return the value of the selected persistent environment variable. Or, if variable and value are both given, set the variable to the new value and return it.
 * (cp [filename(s)...] newpath) : Copy the listed filename(s) to the new path, which may be a directory or a new filename inside a directory. Will NOT create the destination parent directory if it doesn't exist. Not recursive.
 * (cpp [filename(s)...] newpath) : Like cp, but WILL create the destination parent directory if it doesn't exist.
 * (cpr [filename(s)...] newpath) : Like cp, but IS recursive.
