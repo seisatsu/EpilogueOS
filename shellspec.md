@@ -9,7 +9,7 @@ Processes are identified by a number. The current shell process is always zero, 
 Processes have the following attributes:
 * State: Running or Paused.
 * PID: The number identifying the process.
-* Function: Can be a lisp function or REPL. Includes function name and arguments, possibly truncated.
+* Function: Can be a lisp function or REPL. (REPL is an interactive shell.) Includes function name and arguments, possibly truncated.
 
 Global variables, parameters, and constants are erased upon reset or reboot. Environment variables however are saved between resets and reboots.
 
