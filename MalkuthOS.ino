@@ -1,4 +1,4 @@
-/* MalkuthOS Version 0.0.0
+/*
    Michael Reiley - 27th October 2019 
 
    Based on uLisp
@@ -22,15 +22,21 @@ const char LispLibrary[] PROGMEM = "";
 // #define sdcardsupport
 // #define lisplibrary
 
-// Includes
+// uLisp Includes
 
 // #include "LispLibrary.h"
-#include <Arduino_FreeRTOS.h>
 #include <avr/sleep.h>
 #include <setjmp.h>
 #include <SPI.h>
 #include <limits.h>
 #include <EEPROM.h>
+
+// MalkuthOS Includes
+#include <Arduino_FreeRTOS.h>
+#include <ArduinoSTL.h>
+#include <vector>
+
+// Misc. Setup
 
 #if defined(sdcardsupport)
 #include <SD.h>
@@ -124,6 +130,13 @@ typedef struct {
   uint8_t max;
 } tbl_entry_t;
 
+typedef struct {
+  uint8_t psid;
+  bool suspended;
+  const char *desc;
+  TaskHandle_t handle;
+} ps_tbl_entry_t;
+
 typedef int (*gfun_t)();
 typedef void (*pfun_t)(char);
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284P__)
@@ -194,6 +207,8 @@ int GlobalStringIndex = 0;
 char BreakLevel = 0;
 char LastChar = 0;
 char LastPrint = 0;
+
+std::vector<ps_tbl_entry_t> ProcessTable;
 
 // Flags
 enum flag { PRINTREADABLY, RETURNFLAG, ESCAPE, EXITEDITOR, LIBRARYLOADED };
@@ -1296,15 +1311,6 @@ void nonote (int pin) {
 }
 
 // Sleep
-
-/*
-#if !defined(__AVR_ATmega4809__) && !defined(__AVR_ATtiny3216__)
-  // Interrupt vector for sleep watchdog
-  ISR(WDT_vect) {
-  WDTCSR |= 1<<WDIE;
-}
-#endif
-*/
 
 void initsleep () {
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -3853,14 +3859,7 @@ void setup () {
   initenv();
   initsleep();
   pfstring(PSTR("uLisp 2.9 "), pserial); pln(pserial);
-  
-  xTaskCreate(
-    TaskREPL
-    ,  (const portCHAR *)"REPL"   // A name just for humans
-    ,  128  // This stack size can be checked & adjusted by reading the Stack Highwater
-    ,  NULL
-    ,  1
-    ,  NULL );
+  spawnshell();
 }
 
 // Read/Evaluate/Print loop
@@ -3917,3 +3916,21 @@ void TaskREPL (void *pvParameters) {
 }
 
 void loop () {}
+
+// MalkuthOS Functions
+
+void spawnshell () {
+  TaskHandle_t xHandle = NULL;
+  if (not ProcessTable.empty() and ProcessTable[0].desc == "_SHELL_") {
+    vTaskDelete(ProcessTable[0].handle);
+    ProcessTable.erase(ProcessTable.begin());
+  }
+  xTaskCreate(
+    TaskREPL
+    ,  (const portCHAR *)"_SHELL_"
+    ,  128
+    ,  NULL
+    ,  1
+    ,  &xHandle );
+  ProcessTable.insert(0, {0, 0, "_SHELL_", xHandle});
+}
