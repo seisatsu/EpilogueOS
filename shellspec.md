@@ -14,7 +14,7 @@ Processes have the following attributes:
 Global variables, parameters, and constants are erased upon reset or reboot. Environment variables however are saved between resets and reboots.
 
 * (ps [process(es)...]) : If process or list of processes is given, list their information. Otherwise, list information for every process.
-* (spawn [desc] [function/block] [args]) : Applying the given description to the new process in the process table, spawn the given function and args as a new process, or spawn a block of code as a new process. If no function/block or args are given, spawn a new REPL.
+* (spawn desc [function/block] [args]) : Applying the given description to the new process in the process table, spawn the given function and args as a new process, or spawn a block of code as a new process. If no function/block or args are given, spawn a new REPL.
 * (kill [process(es)...]) : If process or list of processes is given, kill them. Otherwise, kill the current process. If the current process is the shell process, also spawn a new one in the foreground.
 * (priority process(es)... [newpriority]) : If newpriority is given, set it as the new priority of the given process or processes, and return it. Otherwise, return the current priority of the given process(es). If multiple, return a list.
 * (fg process) : Move the given process into the foreground.
