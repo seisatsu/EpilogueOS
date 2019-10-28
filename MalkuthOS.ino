@@ -99,7 +99,7 @@ STRINGP, STRINGEQ, STRINGLESS, STRINGGREATER, SORT, STRINGFN, CONCATENATE, SUBSE
 PRINCTOSTRING, PRIN1TOSTRING, LOGAND, LOGIOR, LOGXOR, LOGNOT, ASH, LOGBITP, EVAL, GLOBALS, LOCALS,
 MAKUNBOUND, BREAK, READ, PRIN1, PRINT, PRINC, TERPRI, READBYTE, READLINE, WRITEBYTE, WRITESTRING,
 WRITELINE, RESTARTI2C, GC, ROOM, SAVEIMAGE, LOADIMAGE, CLS, PINMODE, DIGITALREAD, DIGITALWRITE,
-ANALOGREAD, ANALOGWRITE, DELAY, MILLIS, SLEEP, NOTE, EDIT, PPRINT, PPRINTALL, REQUIRE, LISTLIBRARY, ENDFUNCTIONS };
+ANALOGREAD, ANALOGWRITE, DELAY, MILLIS, SLEEP, NOTE, EDIT, PPRINT, PPRINTALL, REQUIRE, LISTLIBRARY, PS, ENDFUNCTIONS };
 
 // Typedefs
 
@@ -3174,6 +3174,7 @@ const char string156[] PROGMEM = "pprint";
 const char string157[] PROGMEM = "pprintall";
 const char string158[] PROGMEM = "require";
 const char string159[] PROGMEM = "list-library";
+const char string160[] PROGMEM = "ps";
 
 const tbl_entry_t lookup_table[] PROGMEM = {
   { string0, NULL, 0, 0 },
@@ -3336,6 +3337,7 @@ const tbl_entry_t lookup_table[] PROGMEM = {
   { string157, fn_pprintall, 0, 0 },
   { string158, fn_require, 1, 1 },
   { string159, fn_listlibrary, 0, 0 },
+  { string160, fn_ps, 0, 0},
 };
 
 // Table lookup functions
@@ -3917,7 +3919,7 @@ void TaskREPL (void *pvParameters) {
 
 void loop () {}
 
-// MalkuthOS Functions
+// MalkuthOS Internal Functions
 
 void spawnshell () {
   TaskHandle_t xHandle = NULL;
@@ -3927,10 +3929,47 @@ void spawnshell () {
   }
   xTaskCreate(
     TaskREPL
-    ,  (const portCHAR *)"_SHELL_"
+    ,  (const portCHAR *)"_SHELL_\0"
     ,  128
     ,  NULL
     ,  1
     ,  &xHandle );
-  ProcessTable.insert(0, {0, 0, "_SHELL_", xHandle});
+  ProcessTable.insert(0, {0, 0, "_SHELL_\0", xHandle});
+}
+
+object *lispstring (const char *s) {
+  object *obj = myalloc();
+  obj->type = STRING;
+  char ch = *s++;
+  object *head = NULL;
+  int chars = 0;
+  while (ch) {
+    if (ch == '\\') ch = *s++;
+    buildstring(ch, &chars, &head);
+    ch = *s++;
+  }
+  obj->cdr = head;
+  return obj;
+}
+
+// MalkuthOS Lisp Functions
+
+object *fn_ps (object *args, object *env) {
+  (void) env;
+  int i;
+  object* psid;
+  object* runn;
+  object* desc;
+  object* result = NULL;
+  //for (i = 0; i < ProcessTable.length(); i++) {
+    i = 0;
+    psid = number(ProcessTable[i].psid);
+    if (ProcessTable[i].suspended == 0)
+      runn = tee;
+    else
+      runn = nil;
+    desc = lispstring(ProcessTable[i].desc);
+    result = cons(psid, cons(runn, cons(desc, NULL)));
+  //}
+  return result;
 }
