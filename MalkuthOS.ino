@@ -16,12 +16,6 @@
    FreeRTOS
    Amazon.com, Inc. - www.freertos.org - 2019
    FreeRTOS is licensed under the MIT license: https://opensource.org/licenses/MIT
-
-   AND
-
-   ArduinoSTL - Vector
-   Garrett A. Kajmowicz - https://github.com/mike-matera/ArduinoSTL - 2004
-   ArduinoSTL is licensed under the LGPLv2.1 License: https://opensource.org/licenses/LGPL-2.1
 */
 
 // Lisp Library
@@ -47,10 +41,10 @@ const char LispLibrary[] PROGMEM = "";
 #include <EEPROM.h>
 
 // MalkuthOS Includes
-
 #include <Arduino_FreeRTOS.h>
 #include <ArduinoSTL.h>
 #include <vector>
+#include <string.h>
 
 // Misc. Setup
 
@@ -3939,7 +3933,7 @@ void loop () {}
 
 void spawnshell () {
   TaskHandle_t xHandle = NULL;
-  if (not ProcessTable.empty() and ProcessTable[0].desc == "_SHELL_") {
+  if (not ProcessTable.empty() and !strcmp(ProcessTable[0].desc, "_SHELL_")) {
     vTaskDelete(ProcessTable[0].handle);
     ProcessTable.erase(ProcessTable.begin());
   }
