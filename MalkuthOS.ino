@@ -1,12 +1,27 @@
 /*
+   MalkuthOS Version 0.0.0p1
    Michael Reiley - 27th October 2019 
+   Licensed under the GPLv3 License: https://opensource.org/licenses/GPL-3.0
 
-   Based on uLisp
+   ----------
+
+   Based on:
 
    uLisp AVR Version 2.9c - www.ulisp.com
    David Johnson-Davies - www.technoblogy.com - 2nd October 2019
+   uLisp is licensed under the MIT license: https://opensource.org/licenses/MIT
 
-   Licensed under the MIT license: https://opensource.org/licenses/MIT
+   AND
+
+   FreeRTOS
+   Amazon.com, Inc. - www.freertos.org - 2019
+   FreeRTOS is licensed under the MIT license: https://opensource.org/licenses/MIT
+
+   AND
+
+   ArduinoSTL - Vector
+   Garrett A. Kajmowicz - https://github.com/mike-matera/ArduinoSTL - 2004
+   ArduinoSTL is licensed under the LGPLv2.1 License: https://opensource.org/licenses/LGPL-2.1
 */
 
 // Lisp Library
@@ -32,6 +47,7 @@ const char LispLibrary[] PROGMEM = "";
 #include <EEPROM.h>
 
 // MalkuthOS Includes
+
 #include <Arduino_FreeRTOS.h>
 #include <ArduinoSTL.h>
 #include <vector>
