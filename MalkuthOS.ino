@@ -30,6 +30,7 @@ const char LispLibrary[] PROGMEM = "";
 // #define printgcs
 // #define sdcardsupport
 // #define lisplibrary
+// #define ramexpansion // https://hackaday.io/project/21561-arduino-mega-2560-32kb-ram-shield
 
 // uLisp Includes
 
@@ -109,7 +110,8 @@ STRINGP, STRINGEQ, STRINGLESS, STRINGGREATER, SORT, STRINGFN, CONCATENATE, SUBSE
 PRINCTOSTRING, PRIN1TOSTRING, LOGAND, LOGIOR, LOGXOR, LOGNOT, ASH, LOGBITP, EVAL, GLOBALS, LOCALS,
 MAKUNBOUND, BREAK, READ, PRIN1, PRINT, PRINC, TERPRI, READBYTE, READLINE, WRITEBYTE, WRITESTRING,
 WRITELINE, RESTARTI2C, GC, ROOM, SAVEIMAGE, LOADIMAGE, CLS, PINMODE, DIGITALREAD, DIGITALWRITE,
-ANALOGREAD, ANALOGWRITE, DELAY, MILLIS, SLEEP, NOTE, EDIT, PPRINT, PPRINTALL, REQUIRE, LISTLIBRARY, PS, ENDFUNCTIONS };
+ANALOGREAD, ANALOGWRITE, DELAY, MILLIS, SLEEP, NOTE, EDIT, PPRINT, PPRINTALL, REQUIRE, LISTLIBRARY, PS,
+FREE, ENDFUNCTIONS };
 
 // Typedefs
 
@@ -3185,6 +3187,7 @@ const char string157[] PROGMEM = "pprintall";
 const char string158[] PROGMEM = "require";
 const char string159[] PROGMEM = "list-library";
 const char string160[] PROGMEM = "ps";
+const char string161[] PROGMEM = "free";
 
 const tbl_entry_t lookup_table[] PROGMEM = {
   { string0, NULL, 0, 0 },
@@ -3348,6 +3351,7 @@ const tbl_entry_t lookup_table[] PROGMEM = {
   { string158, fn_require, 1, 1 },
   { string159, fn_listlibrary, 0, 0 },
   { string160, fn_ps, 0, 0},
+  { string161, fn_free, 0, 0},
 };
 
 // Table lookup functions
@@ -3982,4 +3986,9 @@ object *fn_ps (object *args, object *env) {
     result = cons(psid, cons(runn, cons(desc, NULL)));
   //}
   return result;
+}
+
+object *fn_free (object *args, object *env) {
+  (void) env;
+  return number(Freespace);
 }
