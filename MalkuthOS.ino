@@ -19,7 +19,8 @@
 */
 
 // Lisp Library
-const char LispLibrary[] PROGMEM = "";
+const char LispLibrary[] PROGMEM =
+"(defun ps (&rest args) (pslist))";
 
 // Compile options
 
@@ -29,7 +30,7 @@ const char LispLibrary[] PROGMEM = "";
 #define serialmonitor
 // #define printgcs
 // #define sdcardsupport
-// #define lisplibrary
+#define lisplibrary
 // #define ramexpansion // https://hackaday.io/project/21561-arduino-mega-2560-32kb-ram-shield
 
 // uLisp Includes
@@ -110,8 +111,8 @@ STRINGP, STRINGEQ, STRINGLESS, STRINGGREATER, SORT, STRINGFN, CONCATENATE, SUBSE
 PRINCTOSTRING, PRIN1TOSTRING, LOGAND, LOGIOR, LOGXOR, LOGNOT, ASH, LOGBITP, EVAL, GLOBALS, LOCALS,
 MAKUNBOUND, BREAK, READ, PRIN1, PRINT, PRINC, TERPRI, READBYTE, READLINE, WRITEBYTE, WRITESTRING,
 WRITELINE, RESTARTI2C, GC, ROOM, SAVEIMAGE, LOADIMAGE, CLS, PINMODE, DIGITALREAD, DIGITALWRITE,
-ANALOGREAD, ANALOGWRITE, DELAY, MILLIS, SLEEP, NOTE, EDIT, PPRINT, PPRINTALL, REQUIRE, LISTLIBRARY, PS,
-FREE, ENDFUNCTIONS };
+ANALOGREAD, ANALOGWRITE, DELAY, MILLIS, SLEEP, NOTE, EDIT, PPRINT, PPRINTALL, REQUIRE, LISTLIBRARY,
+PSLIST, FREE, ENDFUNCTIONS };
 
 // Typedefs
 
@@ -3186,7 +3187,7 @@ const char string156[] PROGMEM = "pprint";
 const char string157[] PROGMEM = "pprintall";
 const char string158[] PROGMEM = "require";
 const char string159[] PROGMEM = "list-library";
-const char string160[] PROGMEM = "ps";
+const char string160[] PROGMEM = "pslist";
 const char string161[] PROGMEM = "free";
 
 const tbl_entry_t lookup_table[] PROGMEM = {
@@ -3350,7 +3351,7 @@ const tbl_entry_t lookup_table[] PROGMEM = {
   { string157, fn_pprintall, 0, 0 },
   { string158, fn_require, 1, 1 },
   { string159, fn_listlibrary, 0, 0 },
-  { string160, fn_ps, 0, 0},
+  { string160, fn_pslist, 0, 0},
   { string161, fn_free, 0, 0},
 };
 
@@ -3968,7 +3969,7 @@ object *lispstring (const char *s) {
 
 // MalkuthOS Lisp Functions
 
-object *fn_ps (object *args, object *env) {
+object *fn_pslist (object *args, object *env) {
   (void) env;
   int i;
   object* psid;
