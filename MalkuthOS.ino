@@ -20,7 +20,7 @@
 
 // Lisp Library
 const char LispLibrary[] PROGMEM =
-"(defun ps (&rest args) (pslist))";
+"(defun ps (&rest args) (let ((pstemp (pslist))) (if (zerop (length args)) pstemp (dolist (pn pstemp) (if (= (first pn) (first args)) (return pn))))))"; // ps function
 
 // Compile options
 
