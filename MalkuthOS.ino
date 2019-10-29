@@ -3974,18 +3974,19 @@ object *fn_ps (object *args, object *env) {
   object* psid;
   object* runn;
   object* desc;
-  object* result = NULL;
-  //for (i = 0; i < ProcessTable.length(); i++) {
-    i = 0;
+  object* head = NULL;
+  
+  for (i = 0; i < ProcessTable.size(); i++) {
     psid = number(ProcessTable[i].psid);
     if (ProcessTable[i].suspended == 0)
       runn = tee;
     else
       runn = nil;
     desc = lispstring(ProcessTable[i].desc);
-    result = cons(psid, cons(runn, cons(desc, NULL)));
-  //}
-  return result;
+    object *curr = cons(psid, cons(runn, cons(desc, NULL)));
+    head = cons(curr, head);
+  }
+  return head;
 }
 
 object *fn_free (object *args, object *env) {
