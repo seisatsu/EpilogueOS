@@ -147,6 +147,7 @@ typedef struct {
   uint8_t psid;
   bool suspended;
   const char *desc;
+  char *currdir;
   TaskHandle_t handle;
 } ps_tbl_entry_t;
 
@@ -3949,7 +3950,7 @@ void spawnshell () {
     ,  NULL
     ,  1
     ,  &xHandle );
-  ProcessTable.insert(0, {0, 0, "_SHELL_", xHandle});
+  ProcessTable.insert(0, {0, 0, "_SHELL_", "/", xHandle});
 }
 
 object *lispstring (const char *s) {
@@ -3975,6 +3976,7 @@ object *fn_pslist (object *args, object *env) {
   object* psid;
   object* runn;
   object* desc;
+  object* currdir;
   object* head = NULL;
   
   for (i = 0; i < ProcessTable.size(); i++) {
@@ -3984,7 +3986,8 @@ object *fn_pslist (object *args, object *env) {
     else
       runn = nil;
     desc = lispstring(ProcessTable[i].desc);
-    object *curr = cons(psid, cons(runn, cons(desc, NULL)));
+    currdir = lispstring(ProcessTable[i].currdir);
+    object *curr = cons(psid, cons(runn, cons(desc, cons (currdir, NULL))));
     head = cons(curr, head);
   }
   return head;
