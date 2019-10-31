@@ -20,7 +20,7 @@
 
 // Lisp Library
 const char LispLibrary[] PROGMEM =
-"(defun ps (&rest args) (let ((pstemp (pslist))) (if (zerop (length args)) pstemp (dolist (pn pstemp) (if (= (first pn) (first args)) (return pn))))))"; // ps function
+"(defun ps (&rest args) (let ((pstemp (pslist))) (if (zerop (length args)) pstemp (dolist (pn pstemp) (if (stringp (first args)) (if (string= (third pn) (first args)) (return pn))) (if (numberp (first args)) (if (= (first pn) (first args)) (return pn)))))))"; // ps function
 
 // Compile options
 
@@ -3944,12 +3944,12 @@ void spawnshell () {
   }
   xTaskCreate(
     TaskREPL
-    ,  (const portCHAR *)"_SHELL_\0"
+    ,  (const portCHAR *)"_SHELL_"
     ,  128
     ,  NULL
     ,  1
     ,  &xHandle );
-  ProcessTable.insert(0, {0, 0, "_SHELL_\0", xHandle});
+  ProcessTable.insert(0, {0, 0, "_SHELL_", xHandle});
 }
 
 object *lispstring (const char *s) {
