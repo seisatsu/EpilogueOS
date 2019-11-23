@@ -1,3 +1,5 @@
+. tools/config.sh
+
 tput reset
-rlwrap -I -a password123 minicom
+rlwrap -I -apassword123 minicom -D $board
 kill -9 %

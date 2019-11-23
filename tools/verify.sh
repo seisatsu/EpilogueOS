@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-. config.sh
+. tools/config.sh
 
 usage() {
     cat >&2 <<EOF
@@ -30,7 +30,7 @@ while getopts cgOvh options; do
     esac
 done
 
-bin=$hardware/tools/avr/bin
+bin=/bin
 gcc=$bin/avr-gcc
 gxx=$bin/avr-g++
 ar=$bin/avr-gcc-ar
@@ -47,7 +47,7 @@ mega=$avr/variants/mega
 eeprom=$avr/libraries/EEPROM/src
 spi=$avr/libraries/SPI/src
 freertos=$libraries/FreeRTOS/src
-#stl=$libraries/ArduinoSTL/src
+stl=$libraries/ArduinoSTL/src
 
 if [ -n "$should_optimize" ]; then
     C_O="-Os -flto -ffunction-sections -fdata-sections -fno-fat-lto-objects"
@@ -72,7 +72,7 @@ COMMON_FLAGS="-c -mmcu=atmega2560 -DF_CPU=16000000L -DARDUINO=10810 -DARDUINO_AV
 CORE_ASMFLAGS="$COMMON_FLAGS -x assembler-with-cpp"
 CORE_CFLAGS="$COMMON_FLAGS $C_O $DEBUG -w -std=gnu11"
 CORE_CXXFLAGS="$COMMON_FLAGS $C_O $DEBUG -w -std=gnu++11 -fpermissive -fno-exceptions -fno-threadsafe-statics -Wno-error=narrowing -x c++"
-APP_CXXFLAGS="$CORE_CXXFLAGS -I$spi -I$eeprom -I$freertos" # -I$stl"
+APP_CXXFLAGS="$CORE_CXXFLAGS -I$spi -I$eeprom -I$freertos -I$stl"
 
 LDFLAGS="$LD_O -fdiagnostics-color -w -fuse-linker-plugin -Wl,--gc-sections,--relax -mmcu=atmega2560 -L. -lm"
 

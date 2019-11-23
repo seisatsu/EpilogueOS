@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-. config.sh
+. tools/config.sh
 
 usage() {
     cat >&2 <<EOF
