@@ -4,7 +4,7 @@ set -e
 usage() {
     cat >&2 <<EOF
 $0 [-hv]
-Create lisp.cpp from lisp/*.lisp for inclusion in Arduino PROGMEM.
+Create LispLibrary.cpp from lisp/*.lisp for inclusion in Arduino PROGMEM.
     -v  Verbose output
     -h  Show this help
 EOF
@@ -21,8 +21,8 @@ while getopts hv options; do
 done
 
 input=lisp/*.lisp
-c=lisp.cpp
-h=lisp.h
+c=LispLibrary.cpp
+h=LispLibrary.h
 
 exec 3>&1  # Save handle to stdout.
 e() {
@@ -44,7 +44,7 @@ e echo '#endif' >> $h
 
 e echo '// Warning: This is an automatically generated file.' > $c
 e echo '//          Edits to this file may be lost.' >> $c
-e echo '#include "lisp.h"' >> $c
+e echo '#include "LispLibrary.h"' >> $c
 e echo '' >> $c
 e echo 'const char LispLibrary[] PROGMEM = ""' >> $c
 

@@ -19,7 +19,7 @@
 */
 
 // Lisp Library
-#include "lisp.h"
+#include "LispLibrary.h"
 
 // Compile options
 
@@ -34,7 +34,6 @@
 
 // uLisp Includes
 
-// #include "LispLibrary.h"
 #include <avr/sleep.h>
 #include <setjmp.h>
 #include <SPI.h>
