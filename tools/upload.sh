@@ -19,9 +19,11 @@ while getopts h options; do
 done
 
 bin=$hardware/tools/avr/bin
-etc=$hardware/tools/avr/etc
+#etc=$hardware/tools/avr/etc
+etc=/etc
 
-avrdude=$bin/avrdude
+#avrdude=$bin/avrdude
+avrdude=/usr/bin/avrdude
 
 # Assume we are uploading the last optimized-without-debug-symbols build.
 build_dir="$build_dir"/release
@@ -41,8 +43,8 @@ e() {
     "$@"
 }
 
-BIN=MalkuthOS.ino.elf
-EEP=MalkuthOS/ino.eep
-HEX=MalkuthOS/ino.hex
+BIN=MalkuthOS.cpp.elf
+EEP=MalkuthOS/cpp.eep
+HEX=MalkuthOS/cpp.hex
 
 e $avrdude -C$etc/avrdude.conf -patmega2560 -cwiring -P$board -b115200 -D -Uflash:w:$HEX:i > /dev/null

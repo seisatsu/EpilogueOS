@@ -6,7 +6,7 @@ hardware=/usr/lib/arduino/hardware
 libraries=~/Arduino/libraries
 #libraries=~/Source/MalkuthOS/Sketchbook/libraries
 
-# Location of MalkuthOS.ino file.
+# Location of MalkuthOS.cpp file.
 malkuth=$PWD
 
 # Location to write created object files and binaries.

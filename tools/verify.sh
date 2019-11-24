@@ -80,11 +80,11 @@ CORE_ASMS="wiring_pulse.S"
 CORE_CS="WInterrupts.c wiring.c wiring_analog.c hooks.c wiring_digital.c wiring_pulse.c wiring_shift.c"
 CORE_CXXS="HardwareSerial1.cpp CDC.cpp HardwareSerial0.cpp HardwareSerial.cpp HardwareSerial2.cpp HardwareSerial3.cpp IPAddress.cpp PluggableUSB.cpp Print.cpp Stream.cpp Tone.cpp USBCore.cpp WMath.cpp WString.cpp abi.cpp main.cpp new.cpp"
 
-MALKUTH_CXXS="MalkuthOS.ino"
+MALKUTH_CXXS="MalkuthOS.cpp LispLibrary.cpp"
 SPI_CXXS="SPI.cpp"
 FREERTOS_CXXS="croutine.c event_groups.c heap_3.c list.c port.c queue.c stream_buffer.c tasks.c timers.c variantHooks.cpp"
 STL_CXXS="ArduinoSTL.cpp abi/abi.cpp algorithm.cpp associative_base.cpp bitset.cpp char_traits.cpp complex.cpp del_op.cpp del_opnt.cpp del_ops.cpp del_opv.cpp del_opvnt.cpp del_opvs.cpp deque.cpp eh_alloc.cpp eh_globals.cpp exception.cpp func_exception.cpp iomanip.cpp ios.cpp iostream.cpp istream.cpp iterator.cpp limits.cpp list.cpp locale.cpp map.cpp new_handler.cpp new_op.cpp new_opnt.cpp new_opv.cpp new_opvnt.cpp numeric.cpp ostream.cpp ostream_helpers.cpp queue.cpp set.cpp sstream.cpp stack.cpp stdexcept.cpp streambuf.cpp string.cpp support.cpp typeinfo.cpp utility.cpp valarray.cpp vector.cpp"
-STL_CXXS=""
+#STL_CXXS=""
 
 e() {
     if [ -n "$verbose" ]; then
@@ -197,9 +197,9 @@ done
 
 OBJS="$APP_OBJS core.a"
 
-BIN=MalkuthOS.ino.elf
-EEP=MalkuthOS/ino.eep
-HEX=MalkuthOS/ino.hex
+BIN=MalkuthOS.cpp.elf
+EEP=MalkuthOS/cpp.eep
+HEX=MalkuthOS/cpp.hex
 
 if [ -n "$want_link" ]; then
     if [ -n "$changed" ]; then
