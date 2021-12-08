@@ -200,7 +200,7 @@ K_INPUT, K_INPUT_PULLUP, K_OUTPUT,
 #elif defined(ESP32)
 K_INPUT, K_INPUT_PULLUP, K_INPUT_PULLDOWN, K_OUTPUT,
 #endif
-USERFUNCTIONS, FREE, PSLIST, ENDFUNCTIONS, SET_SIZE = INT_MAX };
+USERFUNCTIONS, FREE, PSLIST, USERTEST, ENDFUNCTIONS, SET_SIZE = INT_MAX };
 
 // Global variables
 
@@ -4194,6 +4194,7 @@ const char string226[] PROGMEM = "";
 
 const char string227[] PROGMEM = "pslist";
 const char string228[] PROGMEM = "free";
+const char string229[] PROGMEM = "usertest";
 
 // Built-in symbol lookup table
 const tbl_entry_t lookup_table[] PROGMEM = {
@@ -4435,6 +4436,7 @@ const tbl_entry_t lookup_table[] PROGMEM = {
 // Insert your own table entries here
   { string227, fn_pslist, 0x00 },
   { string228, fn_free, 0x00 },
+  { string229, fn_usertest, 0x00 },
 
 };
 
@@ -5230,20 +5232,6 @@ void spawnshell () {
   ProcessTable.insert(ProcessTable.begin(), {0, 0, "_SHELL_", "/", xHandle});
 }
 
-object *lispstring (const char *s) {
-  object *obj = myalloc();
-  obj->type = STRING;
-  char ch = *s++;
-  object *head = NULL;
-  while (ch) {
-    if (ch == '\\') ch = *s++;
-    buildstring(ch, &head);
-    ch = *s++;
-  }
-  obj->cdr = head;
-  return obj;
-}
-
 // MalkuthOS Lisp Functions
 
 object *fn_pslist (object *args, object *env) {
@@ -5261,7 +5249,7 @@ object *fn_pslist (object *args, object *env) {
       runn = tee;
     else
       runn = nil;
-    desc = lispstring(ProcessTable[i].desc);
+    desc = lispstring((char*) ProcessTable[i].desc);
     currdir = lispstring(ProcessTable[i].currdir);
     object *curr = cons(psid, cons(runn, cons(desc, cons (currdir, NULL))));
     head = cons(curr, head);
@@ -5272,4 +5260,9 @@ object *fn_pslist (object *args, object *env) {
 object *fn_free (object *args, object *env) {
   (void) env;
   return number(Freespace);
+}
+
+object *fn_usertest (object *args, object *env) {
+  (void) env;
+  return lispstring("usertest");
 }
