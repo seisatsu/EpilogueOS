@@ -1,10 +1,11 @@
 /* uLisp ESP Version 4.0b - www.ulisp.com
    David Johnson-Davies - www.technoblogy.com - 20th October 2021
 
+   MalkuthOS Version 0.0.1
+   Sei Satzparad and Paul Merrill
+
    Licensed under the MIT license: https://opensource.org/licenses/MIT
 */
-
-// Lisp Library
 
 // Compile options
 
