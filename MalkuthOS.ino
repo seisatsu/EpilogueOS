@@ -200,7 +200,7 @@ K_INPUT, K_INPUT_PULLUP, K_OUTPUT,
 #elif defined(ESP32)
 K_INPUT, K_INPUT_PULLUP, K_INPUT_PULLDOWN, K_OUTPUT,
 #endif
-USERFUNCTIONS, FREE, PSLIST, USERTEST, ENDFUNCTIONS, SET_SIZE = INT_MAX };
+USERFUNCTIONS, PSLIST, DEBUGTEST1, FREE, ENDFUNCTIONS, SET_SIZE = INT_MAX };
 
 // Global variables
 
@@ -4193,8 +4193,8 @@ const char string226[] PROGMEM = "";
 // Insert your own function names here
 
 const char string227[] PROGMEM = "pslist";
-const char string228[] PROGMEM = "free";
-const char string229[] PROGMEM = "usertest";
+const char string228[] PROGMEM = "debugtest1";
+const char string229[] PROGMEM = "free";
 
 // Built-in symbol lookup table
 const tbl_entry_t lookup_table[] PROGMEM = {
@@ -4435,8 +4435,8 @@ const tbl_entry_t lookup_table[] PROGMEM = {
 
 // Insert your own table entries here
   { string227, fn_pslist, 0x00 },
-  { string228, fn_free, 0x00 },
-  { string229, fn_usertest, 0x00 },
+  { string228, fn_debugtest1, 0x00 },
+  { string229, fn_free, 0x00 },
 
 };
 
@@ -5257,12 +5257,12 @@ object *fn_pslist (object *args, object *env) {
   return head;
 }
 
-object *fn_free (object *args, object *env) {
-  (void) env;
-  return number(Freespace);
-}
-
-object *fn_usertest (object *args, object *env) {
+object *fn_debugtest1 (object *args, object *env) {
   (void) env;
   return lispstring("usertest");
+}
+
+object *fn_free (object *args, object *env) {
+  (void) env;
+  return number(ESP.getFreeHeap());
 }
