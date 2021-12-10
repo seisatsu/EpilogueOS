@@ -3,6 +3,8 @@
 
    Licensed under the MIT license: https://opensource.org/licenses/MIT
 */
+#ifndef FILESYSTEM_H
+#define FILESYSTEM_H
 
 #include <esp_vfs.h>
 
@@ -17,7 +19,12 @@ typedef enum vfs_type_t {
   vfs_type_sdcard_root,
   vfs_type_device_root,
   vfs_type_error,
-} vfs_type_t;
+};
+
+// Virtual Filesystem State
+typedef struct vfs_state_t {
+  char cwd[128];
+};
 
 // EEPROM FS Definitions
 
@@ -52,3 +59,5 @@ int vfs_devicefs_rename(const char *src, const char *dst);
 
 vfs_type_t check_vfs_type (char *filename);
 char* check_vfs_type_string (char *filename);
+
+#endif

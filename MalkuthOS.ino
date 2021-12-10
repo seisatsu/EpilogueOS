@@ -36,6 +36,7 @@
 // #include <Arduino_FreeRTOS.h>
 #include <vector>
 #include <string.h>
+#include "Filesystem.h"
 
 // Misc Setup
 
@@ -201,7 +202,7 @@ K_INPUT, K_INPUT_PULLUP, K_OUTPUT,
 #elif defined(ESP32)
 K_INPUT, K_INPUT_PULLUP, K_INPUT_PULLDOWN, K_OUTPUT,
 #endif
-USERFUNCTIONS, PSLIST, DEBUGTEST1, FREE, FSTYPE, ENDFUNCTIONS, SET_SIZE = INT_MAX };
+USERFUNCTIONS, PSLIST, DEBUGTEST1, FREE, FSTYPE, PWD, CD, ENDFUNCTIONS, SET_SIZE = INT_MAX };
 
 // Global variables
 
@@ -225,6 +226,8 @@ char LastChar = 0;
 char LastPrint = 0;
 
 std::vector<ps_tbl_entry_t> ProcessTable;
+
+vfs_state_t VFS_STATE;
 
 // Flags
 enum flag { PRINTREADABLY, RETURNFLAG, ESCAPE, EXITEDITOR, LIBRARYLOADED, NOESC, NOECHO };
@@ -4069,6 +4072,8 @@ const char string227[] PROGMEM = "pslist";
 const char string228[] PROGMEM = "debugtest1";
 const char string229[] PROGMEM = "free";
 const char string230[] PROGMEM = "fstype";
+const char string231[] PROGMEM = "pwd";
+const char string232[] PROGMEM = "cd";
 
 // Built-in symbol lookup table
 const tbl_entry_t lookup_table[] PROGMEM = {
@@ -4312,6 +4317,8 @@ const tbl_entry_t lookup_table[] PROGMEM = {
   { string228, fn_debugtest1, 0x00 },
   { string229, fn_free, 0x00 },
   { string230, fn_fstype, 0x11 },
+  { string231, fn_pwd, 0x00 },
+  { string232, fn_cd, 0x01 },
 
 };
 
@@ -5029,6 +5036,7 @@ void setup () {
   initenv();
   initsleep();
   initgfx();
+  init_vfs(VFS_STATE);
   pfstring(PSTR("uLisp 4.0 "), pserial); pln(pserial);
   spawnshell();
 }
@@ -5156,4 +5164,55 @@ object *fn_fstype (object *args, object *env) {
     return nil;
   }
   return lispstring(check_vfs_type_string(cstring(first(args), strbuf, 34)));
+}
+
+object *fn_pwd (object *args, object *env) {
+  (void) env;
+  return lispstring(VFS_STATE.cwd);
+}
+
+object *fn_cd (object *args, object *env) {
+  (void) env;
+  char strbuf[64];
+  char strtmp[64];
+  char strres[64];
+  
+  // No arguments, so change to the root directory.
+  if (listlength(CD, args) == 0) {
+    strcpy(VFS_STATE.cwd, "/");
+    return lispstring(VFS_STATE.cwd);
+  }
+
+  // Not a string.
+  if (!stringp(first(args))) {
+    pstring((char*)notastring, pserial);
+    return nil;
+  }
+
+  // Copy argument into a temporary string.
+  strcpy(strtmp, cstring(first(args), strbuf, 64));
+
+  // The string starts with "/", so it is an absolute path.
+  if (strncmp(strtmp, "/", 1) == 0) {
+    strcpy(VFS_STATE.cwd, strtmp);
+  }
+
+  // The string does not start with "/", so it is a relative path.
+  else {
+    // The only time the cwd will end with a slash is when it's root.
+    // So if cwd is anything other than a single slash,
+    // Assume we should add one before continuing.
+    if (strcmp(VFS_STATE.cwd, "/") != 0) {
+      strcat(VFS_STATE.cwd, "/");
+    }
+    strcat(VFS_STATE.cwd, strtmp);
+  }
+
+  // Make sure our path does not end with a "/".
+  if (strncmp(&VFS_STATE.cwd[strlen(VFS_STATE.cwd)-1], "/", 1) == 0) {
+    VFS_STATE.cwd[strlen(VFS_STATE.cwd)-1] = '\0';
+  }
+
+  // Return the current working directory.
+  return lispstring(VFS_STATE.cwd);
 }
