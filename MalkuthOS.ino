@@ -169,8 +169,8 @@ typedef const struct {
 typedef struct {
   uint8_t psid;
   bool suspended;
-  const char *desc;
-  char *currdir;
+  char desc[64];
+  char currdir[64];
   TaskHandle_t handle;
 } ps_tbl_entry_t;
 
@@ -226,8 +226,6 @@ char LastChar = 0;
 char LastPrint = 0;
 
 std::vector<ps_tbl_entry_t> ProcessTable;
-
-vfs_state_t VFS_STATE;
 
 // Flags
 enum flag { PRINTREADABLY, RETURNFLAG, ESCAPE, EXITEDITOR, LIBRARYLOADED, NOESC, NOECHO };
@@ -5036,7 +5034,7 @@ void setup () {
   initenv();
   initsleep();
   initgfx();
-  init_vfs(VFS_STATE);
+  init_vfs();
   pfstring(PSTR("uLisp 4.0 "), pserial); pln(pserial);
   spawnshell();
 }
@@ -5112,7 +5110,23 @@ void spawnshell () {
     ,  NULL
     ,  1
     ,  &xHandle );
-  ProcessTable.insert(ProcessTable.begin(), {0, 0, "_SHELL_", "/", xHandle});
+
+  ps_tbl_entry_t newps;
+  newps.psid = 0;
+  newps.suspended = false;
+  strcpy(newps.desc, "_SHELL_");
+  strcpy(newps.currdir, "/");
+  newps.handle = xHandle;
+  ProcessTable.insert(ProcessTable.begin(), newps);
+}
+
+ps_tbl_entry_t* getps() {
+  TaskHandle_t thistask_h = xTaskGetCurrentTaskHandle();
+  for(std::vector<ps_tbl_entry_t>::iterator it = ProcessTable.begin(); it != ProcessTable.end(); ++it) {
+    if (&(*it).handle == thistask_h) {
+      return &(*it);
+    }
+  }
 }
 
 bool startswith(const char *a, const char *b)
@@ -5168,7 +5182,7 @@ object *fn_fstype (object *args, object *env) {
 
 object *fn_pwd (object *args, object *env) {
   (void) env;
-  return lispstring(VFS_STATE.cwd);
+  return lispstring(getps()->currdir);
 }
 
 object *fn_cd (object *args, object *env) {
@@ -5176,11 +5190,12 @@ object *fn_cd (object *args, object *env) {
   char strbuf[64];
   char strtmp[64];
   char strres[64];
+  ps_tbl_entry_t* ps = getps();
   
   // No arguments, so change to the root directory.
   if (listlength(CD, args) == 0) {
-    strcpy(VFS_STATE.cwd, "/");
-    return lispstring(VFS_STATE.cwd);
+    strcpy(ps->currdir, "/");
+    return lispstring(ps->currdir);
   }
 
   // Not a string.
@@ -5194,7 +5209,7 @@ object *fn_cd (object *args, object *env) {
 
   // The string starts with "/", so it is an absolute path.
   if (strncmp(strtmp, "/", 1) == 0) {
-    strcpy(VFS_STATE.cwd, strtmp);
+    strcpy(ps->currdir, strtmp);
   }
 
   // The string does not start with "/", so it is a relative path.
@@ -5202,17 +5217,17 @@ object *fn_cd (object *args, object *env) {
     // The only time the cwd will end with a slash is when it's root.
     // So if cwd is anything other than a single slash,
     // Assume we should add one before continuing.
-    if (strcmp(VFS_STATE.cwd, "/") != 0) {
-      strcat(VFS_STATE.cwd, "/");
+    if (strcmp(ps->currdir, "/") != 0) {
+      strcat(ps->currdir, "/");
     }
-    strcat(VFS_STATE.cwd, strtmp);
+    strcat(ps->currdir, strtmp);
   }
 
   // Make sure our path does not end with a "/".
-  if (strncmp(&VFS_STATE.cwd[strlen(VFS_STATE.cwd)-1], "/", 1) == 0) {
-    VFS_STATE.cwd[strlen(VFS_STATE.cwd)-1] = '\0';
+  if (strncmp(&ps->currdir[strlen(ps->currdir)-1], "/", 1) == 0) {
+    ps->currdir[strlen(ps->currdir)-1] = '\0';
   }
 
   // Return the current working directory.
-  return lispstring(VFS_STATE.cwd);
+  return lispstring(ps->currdir);
 }

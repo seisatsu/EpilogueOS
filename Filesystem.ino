@@ -10,7 +10,7 @@
  *  This registers the EEPROM, SDCARD, and External Device Filesystem Drivers
  *  with the ESP32 VFS Component.
  */
-void init_vfs (vfs_state_t vfs_state) {
+void init_vfs () {
   // EEPROM FS Initialization
   /*
   esp_vfs_t vfs_eepromfs {};
@@ -55,8 +55,6 @@ void init_vfs (vfs_state_t vfs_state) {
 
   ESP_ERROR_CHECK(esp_vfs_register("/device", &vfs_devicefs, NULL));
   */
-  // Initialize VFS State
-  strcpy(VFS_STATE.cwd, "/");
 }
 
 /*  Check the type of Filesystem based on pathname.
