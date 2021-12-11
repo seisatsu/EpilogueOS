@@ -202,7 +202,7 @@ K_INPUT, K_INPUT_PULLUP, K_OUTPUT,
 #elif defined(ESP32)
 K_INPUT, K_INPUT_PULLUP, K_INPUT_PULLDOWN, K_OUTPUT,
 #endif
-USERFUNCTIONS, PSLIST, DEBUGTEST1, FREE, FSTYPE, PWD, CD, ENDFUNCTIONS, SET_SIZE = INT_MAX };
+USERFUNCTIONS, PSLIST, DEBUGTEST1, FREE, FSTYPE, PWD, CD, THISPS, ENDFUNCTIONS, SET_SIZE = INT_MAX };
 
 // Global variables
 
@@ -4072,6 +4072,7 @@ const char string229[] PROGMEM = "free";
 const char string230[] PROGMEM = "fstype";
 const char string231[] PROGMEM = "pwd";
 const char string232[] PROGMEM = "cd";
+const char string233[] PROGMEM = "thisps";
 
 // Built-in symbol lookup table
 const tbl_entry_t lookup_table[] PROGMEM = {
@@ -4317,6 +4318,7 @@ const tbl_entry_t lookup_table[] PROGMEM = {
   { string230, fn_fstype, 0x11 },
   { string231, fn_pwd, 0x00 },
   { string232, fn_cd, 0x01 },
+  { string233, fn_thisps, 0x00 },
 
 };
 
@@ -5123,7 +5125,7 @@ void spawnshell () {
 ps_tbl_entry_t* getps() {
   TaskHandle_t thistask_h = xTaskGetCurrentTaskHandle();
   for(std::vector<ps_tbl_entry_t>::iterator it = ProcessTable.begin(); it != ProcessTable.end(); ++it) {
-    if (&(*it).handle == thistask_h) {
+    if (it->handle == thistask_h) {
       return &(*it);
     }
   }
@@ -5152,9 +5154,9 @@ object *fn_pslist (object *args, object *env) {
       runn = tee;
     else
       runn = nil;
-    desc = lispstring((char*) ProcessTable[i].desc);
+    desc = lispstring(ProcessTable[i].desc);
     currdir = lispstring(ProcessTable[i].currdir);
-    object *curr = cons(psid, cons(runn, cons(desc, cons (currdir, NULL))));
+    object *curr = cons(psid, cons(runn, cons(desc, cons(currdir, NULL))));
     head = cons(curr, head);
   }
   return head;
@@ -5230,4 +5232,26 @@ object *fn_cd (object *args, object *env) {
 
   // Return the current working directory.
   return lispstring(ps->currdir);
+}
+
+object *fn_thisps (object *args, object *env) {
+  (void) env;
+  object* psid;
+  object* runn;
+  object* desc;
+  object* currdir;
+  object* head = NULL;
+  ps_tbl_entry_t* thisps = getps();
+
+  psid = number(thisps->psid);
+  if (thisps->suspended == 0)
+    runn = tee;
+  else
+    runn = nil;
+  desc = lispstring(thisps->desc);
+  currdir = lispstring(thisps->currdir);
+  object *curr = cons(psid, cons(runn, cons(desc, cons(currdir, NULL))));
+  head = cons(curr, head);
+
+  return head;
 }

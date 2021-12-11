@@ -12,4 +12,7 @@ const char LispLibrary[] PROGMEM = ""
 "        (if (numberp (first args)) "
 "          (if (= (first pn) (first args)) "
 "            (return pn))))))) "
+" "
+"(defun thispsid () "
+"  (first (first (thisps)))) "
 ;
