@@ -7,7 +7,7 @@ MalkuthOS will offer multiple shell sessions as separate FreeRTOS tasks, as well
 The end goal is a general purpose LoRa mesh networking solution.
 
 
-# Scripts
+## Scripts
 These assume the user is running 64-bit Intel Linux, and that the Arduino IDE 1.8 and the Arduino ESP32 module v2.0 have been installed.
 
 - `bin/compile.sh`: This file needs to be modified to suit your setup, but it will do a complete compile of Malkuth using the Arduino toolkit but without needing the Arduino IDE open.
