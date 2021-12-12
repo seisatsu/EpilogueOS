@@ -4,10 +4,10 @@
 dot_arduino=~/.arduino15
 esp32=$dot_arduino/packages/esp32
 
-build_path=/tmp/arduino_build
+esp32_version=`basename $esp32/hardware/esp32/*` # Tested with 2.0.1
+esptool_version=`basename $esp32/tools/esptool_py/*` # Tested with 3.1.0
 
-esp32_version=$(basename $esp32/hardware/esp32/*) # Tested with 2.0.1
-esptool_version=$(basename $esp32/tools/esptool_py/*) # Tested with 3.1.0
+build_path=/tmp/arduino_build
 
 python3 \
     $esp32/tools/esptool_py/$esptool_version/esptool.py \

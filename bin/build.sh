@@ -7,17 +7,17 @@ dot_arduino=~/.arduino15
 libraries=~/Arduino/libraries
 malkuth=~/Source/MalkuthOS
 
+esp32=$dot_arduino/packages/esp32
+
+gcc_version=`basename $esp32/tools/xtensa-esp32-elf-gcc/*` # Tested with gcc8_4_0-esp-2021r2
+esptool_version=`basename $esp32/tools/esptool_py/*` # Tested with 3.1.0
+mkspiffs_version=`basename $esp32/tools/mkspiffs/*` # Tested with 0.2.3
+mklittlefs_version=`basename $esp32/tools/mklittlefs/*` # Tested with 3.0.0-gnu12-dc7f933
+
 build_path=/tmp/arduino_build
 cache_path=/tmp/arduino_cache
 
-esp32=$dot_arduino/packages/esp32
-
 mkdir -p $build_path $cache_path
-
-gcc_version=$(basename $esp32/tools/xtensa-esp32-elf-gcc/*) # Tested with gcc8_4_0-esp-2021r2
-esptool_version=$(basename $esp32/tools/esptool_py/*) # Tested with 3.1.0
-mkspiffs_version=$(basename $esp32/tools/mkspiffs/*) # Tested with 0.2.3
-mklittlefs_version=$(basename $esp32/tools/mklittlefs/*) # Tested with 3.0.0-gnu12-dc7f933
 
 $arduino/arduino-builder \
     -compile \
