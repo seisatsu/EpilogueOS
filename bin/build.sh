@@ -1,5 +1,5 @@
 #!/bin/sh
-# Tested with arduino-1.8.16 and arduino-esp32 2.0.1 on December 11th, 2021.
+# Tested on AMD64 Linux with arduino-1.8.16 and arduino-esp32 2.0.1 on December 11th, 2021.
 
 arduino=~/Source/arduino-1.8.16
 arduino_ide_version=10816
