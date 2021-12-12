@@ -2,6 +2,7 @@
 # Tested with arduino-1.8.16 and arduino-esp32 2.0.1 on December 11th, 2021.
 
 arduino=~/Source/arduino-1.8.16
+arduino_ide_version=10816
 dot_arduino=~/.arduino15
 libraries=~/Arduino/libraries
 malkuth=~/Source/MalkuthOS
@@ -30,7 +31,7 @@ $arduino/arduino-builder \
     -libraries $libraries \
     -fqbn=esp32:esp32:esp32:PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,LoopCore=1,EventsCore=1,DebugLevel=none \
     -vid-pid=10C4_EA60 \
-    -ide-version=10816 \
+    -ide-version=$arduino_ide_version \
     -build-path $build_path \
     -warnings=none \
     -build-cache $cache_path \
