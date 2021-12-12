@@ -8,10 +8,6 @@ build_path=/tmp/arduino_build
 esp32_version=$(basename $esp32/hardware/esp32/*) # Tested with 2.0.1
 esptool_version=$(basename $esp32/tools/esptool_py/*) # Tested with 3.1.0
 
-
-#$DOT_ARDUINO/packages/esp32/hardware/esp32/2.0.1/tools/partitions/boot_app0.bin
-#$DOT_ARDUINO/packages/esp32/tools/esptool_py/3.1.0/esptool.py
-
 python3 \
     $esp32/tools/esptool_py/$esptool_version/esptool.py \
     --chip esp32 \
