@@ -38,12 +38,12 @@ int vfs_eepromfs_rename(const char *src, const char *dst);
 // SDCARD FS Definitions
 
 #if defined(sdcardsupport)
-  int vfs_sdcardfs_open(const char *path, int flags, int mode);
-  int vfs_sdcardfs_fstat(int fd, struct stat *st);
-  int vfs_sdcardfs_close(int fd);
-  ssize_t vfs_sdcardfs_read(int fd, void *dst, size_t size);
-  ssize_t vfs_sdcardfs_write(int fd, const void *data, size_t size);
-  int vfs_sdcardfs_rename(const char *src, const char *dst);
+int vfs_sdcardfs_open(const char *path, int flags, int mode);
+int vfs_sdcardfs_fstat(int fd, struct stat *st);
+int vfs_sdcardfs_close(int fd);
+ssize_t vfs_sdcardfs_read(int fd, void *dst, size_t size);
+ssize_t vfs_sdcardfs_write(int fd, const void *data, size_t size);
+int vfs_sdcardfs_rename(const char *src, const char *dst);
 #endif
 
 // External Device FS Definitions
@@ -57,7 +57,7 @@ int vfs_devicefs_rename(const char *src, const char *dst);
 
 // VFS Functions
 
-vfs_type_t check_vfs_type (char *filename);
-char* check_vfs_type_string (char *filename);
+vfs_type_t check_vfs_type(char *filename);
+char *check_vfs_type_string(char *filename);
 
 #endif
