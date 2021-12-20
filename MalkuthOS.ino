@@ -6331,7 +6331,7 @@ object *fn_fstype(object *args, object *env) {
     pstring((char *)notastring, pserial);
     return nil;
   }
-  return lispstring(check_vfs_type_string(cstring(first(args), strbuf, 34)));
+  return lispstring(vfs_check_type_string(cstring(first(args), strbuf, 34)));
 }
 
 object *fn_pwd(object *args, object *env) {
@@ -6342,14 +6342,10 @@ object *fn_pwd(object *args, object *env) {
 object *fn_cd(object *args, object *env) {
   (void)env;
   char strbuf[64];
-  char strtmp[64];
-  char strres[64];
-  ps_tbl_entry_t *ps = getps();
-
+  
   // No arguments, so change to the root directory.
   if (listlength(CD, args) == 0) {
-    strcpy(ps->currdir, "/");
-    return lispstring(ps->currdir);
+    return lispstring(vfs_change_directory("/"));
   }
 
   // Not a string.
@@ -6358,32 +6354,8 @@ object *fn_cd(object *args, object *env) {
     return nil;
   }
 
-  // Copy argument into a temporary string.
-  strcpy(strtmp, cstring(first(args), strbuf, 64));
-
-  // The string starts with "/", so it is an absolute path.
-  if (strncmp(strtmp, "/", 1) == 0) {
-    strcpy(ps->currdir, strtmp);
-  }
-
-  // The string does not start with "/", so it is a relative path.
-  else {
-    // The only time the cwd will end with a slash is when it's root.
-    // So if cwd is anything other than a single slash,
-    // Assume we should add one before continuing.
-    if (strcmp(ps->currdir, "/") != 0) {
-      strcat(ps->currdir, "/");
-    }
-    strcat(ps->currdir, strtmp);
-  }
-
-  // Make sure our path does not end with a "/".
-  if (strncmp(&ps->currdir[strlen(ps->currdir) - 1], "/", 1) == 0) {
-    ps->currdir[strlen(ps->currdir) - 1] = '\0';
-  }
-
-  // Return the current working directory.
-  return lispstring(ps->currdir);
+  // Change directories and return the new current directory.
+  return lispstring(vfs_change_directory(cstring(first(args), strbuf, 64)));
 }
 
 object *fn_thisps(object *args, object *env) {

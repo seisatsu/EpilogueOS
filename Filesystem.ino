@@ -41,7 +41,7 @@ void init_vfs() {
     ESP_ERROR_CHECK(esp_vfs_register("/sdcard", &vfs_sdcardfs, NULL));
   #endif
 
-  // External Device FS Initialization
+  // Device FS Initialization
 
   esp_vfs_t vfs_devicefs {};
 
@@ -61,8 +61,8 @@ void init_vfs() {
  *  Returns a typedef enum vfs_type_t.
  *  We have to redefine our prototype to get around an Arduino compiler quirk.
  */
-vfs_type_t check_vfs_type(char *filename);
-vfs_type_t check_vfs_type(char *filename) {
+vfs_type_t vfs_check_type(char *filename);
+vfs_type_t vfs_check_type(char *filename) {
   // Check if this path is the VFS root.
   if (strcmp(filename, "/") == 0) {
     return vfs_type_root;
@@ -75,7 +75,7 @@ vfs_type_t check_vfs_type(char *filename) {
   if (strcmp(filename, "/sdcard/") == 0 or strcmp(filename, "/sdcard") == 0) {
     return vfs_type_sdcard_root;
   }
-  // Check if this path is the External Device filesystem root.
+  // Check if this path is the External DEVICE filesystem root.
   if (strcmp(filename, "/device/") == 0 or strcmp(filename, "/device") == 0) {
     return vfs_type_device_root;
   }
@@ -87,16 +87,16 @@ vfs_type_t check_vfs_type(char *filename) {
   if (strncmp(filename, "/sdcard/", 8) == 0) {
     return vfs_type_sdcard;
   }
-  // Check if this path is a virtual file in the External Device filesystem.
+  // Check if this path is a virtual file in the DEVICE filesystem.
   if (strncmp(filename, "/device/", 8) == 0) {
     return vfs_type_device;
   }
-  // This is an illegal path; files must exist in the EEPROM or SDCARD
+  // This is an illegal path; files must exist in the EEPROM, SDCARD, or DEVICE filesystem.
   // filesystems.
   return vfs_type_error;
 }
 
-char *check_vfs_type_string(char *filename) {
+char *vfs_check_type_string(char *filename) {
   // Check if this path is the VFS root.
   if (strcmp(filename, "/") == 0) {
     return "root";
@@ -109,7 +109,7 @@ char *check_vfs_type_string(char *filename) {
   if (strcmp(filename, "/sdcard/") == 0 or strcmp(filename, "/sdcard") == 0) {
     return "sdcard_root";
   }
-  // Check if this path is the External Device filesystem root.
+  // Check if this path is the DEVICE filesystem root.
   if (strcmp(filename, "/device/") == 0 or strcmp(filename, "/device") == 0) {
     return "device_root";
   }
@@ -121,14 +121,55 @@ char *check_vfs_type_string(char *filename) {
   if (strncmp(filename, "/sdcard/", 8) == 0) {
     return "sdcard";
   }
-  // Check if this path is a virtual file in the External Device filesystem.
+  // Check if this path is a virtual file in the DEVICE filesystem.
   if (strncmp(filename, "/device/", 8) == 0) {
     return "device";
   }
-  // This is an illegal path; files must exist in the EEPROM or SDCARD
+  // This is an illegal path; files must exist in the EEPROM, SDCARD, or DEVICE filesystem.
   // filesystems.
   return "error";
 }
+
+char *vfs_change_directory(char *path) {
+  // TODO: Handle irritating edge cases, like a user putting two slashes in the middle of a path.
+  char strres[64];
+  ps_tbl_entry_t *ps = getps();
+
+  // No arguments, so just return to the root directory.
+  if (strcmp(path, "/") == 0 or strlen(path) == 0) {
+    strcpy(ps->currdir, "/");
+    return ps->currdir;
+  }
+
+  // The path string starts with "/", so it is an absolute path.
+  if (strncmp(path, "/", 1) == 0) {
+    strcpy(ps->currdir, path);
+  }
+  
+  // The path string does not start with "/", so it is a relative path.
+  else {
+    // The only time the cwd will end with a slash is when it's root.
+    // So if cwd is anything other than a single slash,
+    // Assume we should add one before continuing.
+    if (strcmp(ps->currdir, "/") != 0) {
+      strcat(ps->currdir, "/");
+    }
+    strcat(ps->currdir, path);
+  }
+
+  // Make sure our path does not end with a "/".
+  // If it does, replace the "/" with a null character.
+  // Also handle multiple slashes if that happens for some reason.
+  while (strncmp(&ps->currdir[strlen(ps->currdir) - 1], "/", 1) == 0) {
+    ps->currdir[strlen(ps->currdir) - 1] = '\0';
+  }
+
+  // Return the new current directory.
+  return(ps->currdir);
+}
+
+//char *join_paths(char *left, char *right) {
+//}
 
 // Save-image and load-image
 
