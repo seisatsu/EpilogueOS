@@ -15,6 +15,8 @@
 typedef struct device_driver_t {
   int (*open)(const char *, int, int);
   int (*fstat)(int, struct stat *);
+  int (*stat)(const char *, struct stat *);
+  off_t (*lseek)(int, void *, size_t)
   int (*close)(int);
   ssize_t (*read)(int, void *, size_t);
   ssize_t (*write)(int, const void *, size_t);
@@ -84,6 +86,8 @@ devicefs_status_t devicefs_unregister_file(const char *filename);
 // Device file manipulation functions.
 int vfs_devicefs_open(const char *filename, int flags, int mode);
 int vfs_devicefs_fstat(int fd, struct stat *st);
+int vfs_devicefs_stat(const char *filename, struct stat *st);
+off_t vfs_devicefs_lseek(int fd, void *dst, size_t size);
 int vfs_devicefs_close(int fd);
 ssize_t vfs_devicefs_read(int fd, void *dst, size_t size);
 ssize_t vfs_devicefs_write(int fd, const void *data, size_t size);

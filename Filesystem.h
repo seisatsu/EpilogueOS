@@ -6,6 +6,7 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
+#define FD_SETSIZE 256
 #include <esp_vfs.h>
 
 // ID of the last file handle produced.
@@ -35,6 +36,8 @@ typedef enum vfs_mode_t {
 
 int vfs_eepromfs_open(const char *path, int flags, int mode);
 int vfs_eepromfs_fstat(int fd, struct stat *st);
+int vfs_eepromfs_stat(const char *path, struct stat *st);
+off_t vfs_eepromfs_lseek(int fd, void *dst, size_t size);
 int vfs_eepromfs_close(int fd);
 ssize_t vfs_eepromfs_read(int fd, void *dst, size_t size);
 ssize_t vfs_eepromfs_write(int fd, const void *data, size_t size);
@@ -45,6 +48,8 @@ int vfs_eepromfs_rename(const char *src, const char *dst);
 #if defined(sdcardsupport)
 int vfs_sdcardfs_open(const char *path, int flags, int mode);
 int vfs_sdcardfs_fstat(int fd, struct stat *st);
+int vfs_sdcardfs_stat(const char *path, struct stat *st);
+off_t vfs_sdcardfs_lseek(int fd, void *dst, size_t size);
 int vfs_sdcardfs_close(int fd);
 ssize_t vfs_sdcardfs_read(int fd, void *dst, size_t size);
 ssize_t vfs_sdcardfs_write(int fd, const void *data, size_t size);

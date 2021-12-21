@@ -199,6 +199,59 @@ int vfs_devicefs_fstat(int fd, struct stat *st) {
 }
 
 /*
+ * Run stat on a file.
+ * This is mostly passed off to the driver.
+ * We only fail directly if the file doesn't exist, or no appropriate driver is found.
+ */
+int vfs_devicefs_stat(const char *filename, struct stat *st) {
+  // If we can't find a file with this filename in the File Table, fail.
+  if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
+    return (int)devicefs_status_file_not_found;
+  }
+
+  // Retrieve the appropriate driver for this file from the Driver Registry. Otherwise, fail.
+  device_driver_t *driver;
+  if (devicefs_get_driver(devicefs_file_table[filename]->type, devicefs_file_table[filename]->subtype, driver) != 0) {
+    return (int)devicefs_status_no_matching_driver;
+  }
+
+  // Return the result from the driver, which is assumed to be positive if not an error. Errors are always negative.
+  return driver->stat(filename, st);
+}
+
+/*
+ * Do an lseek on a file.
+ * This is mostly passed off to the driver.
+ * We only fail directly if the file doesn't exist, or no appropriate driver is found.
+ */
+off_t vfs_devicefs_lseek(int fd, void *dst, size_t size) {
+  // We'll need this later as a string buffer.
+  char filename[64];
+  
+  // Make sure this file handle is valid. Otherwise, fail.
+  if (devicefs_handle_table.find(fd) == devicefs_handle_table.end()) {
+    return (off_t)devicefs_status_invalid_file_handle;
+  }
+
+  // Copy the handle's corresponding filename into our string buffer.
+  strcpy(filename, devicefs_handle_table[fd]);
+
+  // If we can't find a file with this filename in the File Table, fail.
+  if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
+    return (off_t)devicefs_status_file_not_found;
+  }
+
+  // Retrieve the appropriate driver for this file from the Driver Registry. Otherwise, fail.
+  device_driver_t *driver;
+  if (devicefs_get_driver(devicefs_file_table[filename]->type, devicefs_file_table[filename]->subtype, driver) != 0) {
+    return (off_t)devicefs_status_no_matching_driver;
+  }
+
+  // Return the result from the driver, which is assumed to be positive if not an error. Errors are always negative.
+  return driver->lseek(fd, dst, size);
+}
+
+/*
  * Close a file.
  * Tell the driver to handle its own cleanup functions, and then destroy our file handle.
  */
