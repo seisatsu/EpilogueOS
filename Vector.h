@@ -7,7 +7,6 @@
 #define xmalloc(T, count) \
     ((T*)malloc(sizeof(T) * (count)))
 
-// Does not call move constructors in its own move constructor or when growing.
 template<typename X>
 class mal_vector {
  public:
