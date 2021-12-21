@@ -206,7 +206,6 @@ class mal_vector {
         size += n;
     }
 
-
     //
     // Element removals
     //
