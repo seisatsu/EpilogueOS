@@ -36,6 +36,8 @@ std::map<device_type_pair_t, device_driver_t *> devicefs_driver_registry;
 
 // This contains the different kinds of status codes that DeviceFS functions can return.
 // See the further documentation at this function's prototype.
+// ALL RETURN STATUSES FROM DOWNSTREAM DRIVER FUNCTIONS MUST BE MORE THAN -1 OR LESS THAN -127.
+// A zero return status is always assumed to be a boring success.
 typedef enum devicefs_status_t {
   devicefs_status_success = 0,
   devicefs_status_no_matching_driver = -1,
