@@ -35,6 +35,7 @@
 // MalkuthOS Includes
 // #include <Arduino_FreeRTOS.h>
 #include "Filesystem.h"
+#include "DeviceFS.h"
 #include <string.h>
 #include <vector>
 

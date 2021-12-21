@@ -6,14 +6,23 @@
 
 #include "DeviceFS.h"
 
-int devicefs_register(const char *filename/*, void (*read_function)(int, void, size_t), (*write_function)(int, const void *, size_t)*/) {
+typedef enum device_type_t;
+int devicefs_register_file(const char *filename, device_type_t type, const char *subtype) {
+  if (devicefs_driver_registry.find(std::make_pair(type, subtype)) == devicefs_driver_registry.end()) {
+    return -1;
+  }
+  if (devicefs_file_table.find(filename) != devicefs_file_table.end()) {
+    return -2;
+  }
   devicefs_file_t *thisfile;
   strcpy(thisfile->filename, filename);
+  thisfile->type = type;
+  strcpy(thisfile->subtype, subtype);
   devicefs_file_table[filename] = thisfile;
   return 0;
 }
 
-int devicefs_unregister(const char *filename) {
+int devicefs_unregister_file(const char *filename) {
   if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
     return -1;
   }
@@ -22,6 +31,9 @@ int devicefs_unregister(const char *filename) {
 }
 
 int vfs_devicefs_open(const char *path, int flags, int mode) {
+  if (devicefs_file_table.find(path) == devicefs_file_table.end()) {
+    return -1;
+  }
   vfs_last_handle++;
   devicefs_handle_table[vfs_last_handle] = path;
   devicefs_file_table[path]->handles.push_back(vfs_last_handle);
