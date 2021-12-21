@@ -35,6 +35,7 @@ typedef std::pair<device_type_t, const char *> device_type_pair_t;
 std::map<device_type_pair_t, device_driver_t *> devicefs_driver_registry;
 
 // This contains the different kinds of status codes that DeviceFS functions can return.
+// See the further documentation at this function's prototype.
 typedef enum devicefs_status_t {
   devicefs_status_success = 0,
   devicefs_status_no_matching_driver = -1,
@@ -44,7 +45,11 @@ typedef enum devicefs_status_t {
   devicefs_status_driver_already_registered = -5,
   devicefs_status_driver_unimplemented_function = -6,
   devicefs_status_invalid_file_handle = -7,
+  // All numbers between here are reserved for devicefs_status_t.
+  devicefs_status_invalid = -126,
+  devicefs_status_downstream = -127,
 };
+#define DEVICEFS_LAST_STATUS -7
 
 // This is a file descriptor within the File Table.
 // It contains the filename, device type & subtype, and a list of its open file handles.
@@ -60,6 +65,9 @@ std::map<const char *, devicefs_file_t *> devicefs_file_table;
 
 // This is the File Handle Table, which contains all open filenames mapped by their handles.
 std::map<int, const char *> devicefs_handle_table;
+
+// DeviceFS status checker.
+devicefs_status_t devicefs_check_status(int status);
 
 // Driver registration, unregistration, and retrieval functions.
 devicefs_status_t devicefs_register_driver(device_driver_t *driver, device_type_t type, const char *subtype);
