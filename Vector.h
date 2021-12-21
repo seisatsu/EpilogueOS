@@ -232,7 +232,7 @@ class mal_vector {
     }
 
     //
-    // Miscellaneous
+    // Memory management
     //
 
     /**
