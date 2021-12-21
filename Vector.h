@@ -126,7 +126,6 @@ class mal_vector {
      * Access a single element.
      */
     X& operator[](size_t i) {
-        assert(i < size);
         return data[i];
     }
 
@@ -175,7 +174,6 @@ class mal_vector {
      */
     void insert(size_t i, const X& x) {
         // FIXME: Does not call move constructors.
-        assert(i <= size);
         grow();
         memmove(data + i, data + i + 1, sizeof(X) * (size - i));
         new (data + i) X(x);
@@ -187,7 +185,6 @@ class mal_vector {
      */
     void insert(size_t i, X&& x) {
         // FIXME: Does not call move constructors.
-        assert(i <= size);
         grow();
         memmove(data + i, data + i + 1, sizeof(X) * (size - i));
         new (data + i) X(static_cast<X&&>(x));
@@ -198,7 +195,6 @@ class mal_vector {
      * Add an array of element to the end by copying existing values.
      */
     void append(size_t n, const X* xs) {
-        assert(n <= size);
         reserve(size + n);  // FIXME: Choose better size.
         for (size_t i = 0; i < n; i++) {
             new (data + size + i) X(xs[i]);
@@ -214,7 +210,6 @@ class mal_vector {
      * Remove the last element.
      */
     void pop() {
-        assert(size);
         data[size - 1].~X();
         size--;
     }
@@ -223,7 +218,6 @@ class mal_vector {
      * Remove an element.
      */
     void erase(size_t i) {
-        assert(i < size);
         for (size_t j = i; j < size - 1; j++) {
             data[j] = static_cast<X&&>(data[j + 1]);
         }
@@ -243,7 +237,6 @@ class mal_vector {
      * empty.
      */
     void reserve(size_t n) {
-        assert(n > capacity);
         X* newData = xmalloc(X, n);
         for (size_t i = 0; i < size; i++) {
             new (newData + i) X(static_cast<X&&>(data[i]));
