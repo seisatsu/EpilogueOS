@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define xmalloc(T, count) \
+    ((T*)malloc(sizeof(T) * (count)))
+
 // Does not call move constructors in its own move constructor or when growing.
 template<typename X>
 class mal_vector {
@@ -25,7 +28,7 @@ class mal_vector {
             size = capacity = 0;
         }
         else {
-            data = malloc(X, other.capacity);
+            data = xmalloc(X, other.capacity);
             size = other.size;
             capacity = other.capacity;
             for (size_t i = 0; i < size; i++) {
@@ -63,7 +66,7 @@ class mal_vector {
             size = capacity = 0;
         }
         else {
-            data = malloc(X, other.capacity);
+            data = xmalloc(X, other.capacity);
             size = other.size;
             capacity = other.capacity;
             for (size_t i = 0; i < size; i++) {
@@ -172,7 +175,7 @@ class mal_vector {
     // destructors on the just-moved objects since they are hopefully empty.
     void reserve(size_t n) {
         assert(n > capacity);
-        X* newData = malloc(X, n);
+        X* newData = xmalloc(X, n);
         for (size_t i = 0; i < size; i++) {
             new (newData + i) X(static_cast<X&&>(data[i]));
         }
