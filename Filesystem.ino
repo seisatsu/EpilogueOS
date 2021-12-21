@@ -57,6 +57,10 @@ void init_vfs() {
   ESP_ERROR_CHECK(esp_vfs_register("/device", &vfs_devicefs, NULL));
 }
 
+void vfs_init() {
+  vfs_last_handle = 0;
+}
+
 /*  Check the type of Filesystem based on pathname.
  *  Returns a typedef enum vfs_type_t.
  *  We have to redefine our prototype to get around an Arduino compiler quirk.

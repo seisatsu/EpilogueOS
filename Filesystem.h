@@ -53,6 +53,7 @@ int vfs_sdcardfs_rename(const char *src, const char *dst);
 
 // VFS Functions
 
+void vfs_init();
 vfs_type_t vfs_check_type(char *filename);
 char *vfs_check_type_string(char *filename);
 char *vfs_change_directory(char *path);
