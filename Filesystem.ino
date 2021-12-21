@@ -49,15 +49,15 @@ void init_vfs() {
   vfs_devicefs.flags = ESP_VFS_FLAG_DEFAULT;
   vfs_devicefs.open  = &vfs_devicefs_open;
   vfs_devicefs.fstat = &vfs_devicefs_fstat;
+  vfs_devicefs.stat = &vfs_devicefs_stat;
+  vfs_devicefs.lseek = &vfs_devicefs_lseek;
   vfs_devicefs.close = &vfs_devicefs_close;
   vfs_devicefs.read  = &vfs_devicefs_read;
   vfs_devicefs.write = &vfs_devicefs_write;
   vfs_devicefs.rename = &vfs_devicefs_rename;
 
   ESP_ERROR_CHECK(esp_vfs_register("/device", &vfs_devicefs, NULL));
-}
 
-void vfs_init() {
   vfs_last_handle = 0;
 }
 

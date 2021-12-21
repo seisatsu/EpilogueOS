@@ -16,7 +16,7 @@ typedef struct device_driver_t {
   int (*open)(const char *, int, int);
   int (*fstat)(int, struct stat *);
   int (*stat)(const char *, struct stat *);
-  off_t (*lseek)(int, void *, size_t);
+  off_t (*lseek)(int fd, off_t size, int mode);
   int (*close)(int);
   ssize_t (*read)(int, void *, size_t);
   ssize_t (*write)(int, const void *, size_t);
@@ -28,8 +28,13 @@ typedef struct device_driver_t {
 typedef enum device_type_t {
   device_type_pin,
   device_type_rtc,
-  device_type_sdcardfs,
-  device_type_eepromfs,
+  device_type_i2c,
+  device_type_spi,
+  device_type_wifi,
+  device_type_bluetooth,
+  deivce_type_lora,
+  device_type_sdcardfs, // Raw access to SD card.
+  device_type_eepromfs, // Raw access to EEPROM.
 };
 
 // Declare the Driver Registry, where we can look up a driver by the device type & subtype pair

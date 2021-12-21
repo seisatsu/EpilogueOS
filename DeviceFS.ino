@@ -225,7 +225,7 @@ int vfs_devicefs_stat(const char *filename, struct stat *st) {
  * This is mostly passed off to the driver.
  * We only fail directly if the file doesn't exist, or no appropriate driver is found.
  */
-off_t vfs_devicefs_lseek(int fd, void *dst, size_t size) {
+off_t vfs_devicefs_lseek(int fd, off_t size, int mode) {
   // We'll need this later as a string buffer.
   char filename[64];
   
@@ -249,7 +249,7 @@ off_t vfs_devicefs_lseek(int fd, void *dst, size_t size) {
   }
 
   // Return the result from the driver, which is assumed to be positive if not an error. Errors are always negative.
-  return driver->lseek(fd, dst, size);
+  return driver->lseek(fd, size, mode);
 }
 
 /*
