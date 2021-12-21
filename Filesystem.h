@@ -1,5 +1,5 @@
 /* MalkuthOS Version 0.0.1
-   Sei Satzparad and Paul Merrill
+   Sei Satzparad and Paul Merrill - 2022
 
    Licensed under the MIT license: https://opensource.org/licenses/MIT
 */
@@ -7,6 +7,9 @@
 #define FILESYSTEM_H
 
 #include <esp_vfs.h>
+
+// ID of the last file handle produced.
+int vfs_last_handle;
 
 // Filesystem Type Enumeration
 
@@ -21,9 +24,11 @@ typedef enum vfs_type_t {
   vfs_type_error,
 };
 
-// Virtual Filesystem State
-typedef struct vfs_state_t {
-  char cwd[128];
+typedef enum vfs_mode_t {
+  vfs_mode_r,
+  vfs_mode_w,
+  vfs_mode_rw,
+  vfs_mode_a,
 };
 
 // EEPROM FS Definitions
@@ -45,15 +50,6 @@ ssize_t vfs_sdcardfs_read(int fd, void *dst, size_t size);
 ssize_t vfs_sdcardfs_write(int fd, const void *data, size_t size);
 int vfs_sdcardfs_rename(const char *src, const char *dst);
 #endif
-
-// DEVICE FS Definitions
-
-int vfs_devicefs_open(const char *path, int flags, int mode);
-int vfs_devicefs_fstat(int fd, struct stat *st);
-int vfs_devicefs_close(int fd);
-ssize_t vfs_devicefs_read(int fd, void *dst, size_t size);
-ssize_t vfs_devicefs_write(int fd, const void *data, size_t size);
-int vfs_devicefs_rename(const char *src, const char *dst);
 
 // VFS Functions
 

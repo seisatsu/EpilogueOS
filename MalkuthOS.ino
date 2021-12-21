@@ -2,7 +2,7 @@
    David Johnson-Davies - www.technoblogy.com - 20th October 2021
 
    MalkuthOS Version 0.0.1
-   Sei Satzparad and Paul Merrill
+   Sei Satzparad and Paul Merrill - 2022
 
    Licensed under the MIT license: https://opensource.org/licenses/MIT
 */
@@ -6326,12 +6326,12 @@ object *fn_free(object *args, object *env) {
 
 object *fn_fstype(object *args, object *env) {
   (void)env;
-  char strbuf[34];
+  char strbuf[8];
   if (!stringp(first(args))) {
     pstring((char *)notastring, pserial);
     return nil;
   }
-  return lispstring(vfs_check_type_string(cstring(first(args), strbuf, 34)));
+  return lispstring(vfs_check_type_string(cstring(first(args), strbuf, 8)));
 }
 
 object *fn_pwd(object *args, object *env) {
@@ -6341,7 +6341,7 @@ object *fn_pwd(object *args, object *env) {
 
 object *fn_cd(object *args, object *env) {
   (void)env;
-  char strbuf[64];
+  char strbuf[128];
   
   // No arguments, so change to the root directory.
   if (listlength(CD, args) == 0) {
@@ -6355,7 +6355,7 @@ object *fn_cd(object *args, object *env) {
   }
 
   // Change directories and return the new current directory.
-  return lispstring(vfs_change_directory(cstring(first(args), strbuf, 64)));
+  return lispstring(vfs_change_directory(cstring(first(args), strbuf, 128)));
 }
 
 object *fn_thisps(object *args, object *env) {

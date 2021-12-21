@@ -1,5 +1,5 @@
 /* MalkuthOS Version 0.0.1
-   Sei Satzparad and Paul Merrill
+   Sei Satzparad and Paul Merrill - 2022
 
    Licensed under the MIT license: https://opensource.org/licenses/MIT
 */
@@ -11,8 +11,8 @@
  *  with the ESP32 VFS Component.
  */
 void init_vfs() {
-  // EEPROM FS Initialization
   /*
+  // EEPROM FS Initialization
   esp_vfs_t vfs_eepromfs {};
 
   vfs_eepromfs.flags = ESP_VFS_FLAG_DEFAULT;
@@ -41,7 +41,8 @@ void init_vfs() {
     ESP_ERROR_CHECK(esp_vfs_register("/sdcard", &vfs_sdcardfs, NULL));
   #endif
 
-  // Device FS Initialization
+  */
+  // DEVICE FS Initialization
 
   esp_vfs_t vfs_devicefs {};
 
@@ -54,7 +55,6 @@ void init_vfs() {
   vfs_devicefs.rename = &vfs_devicefs_rename;
 
   ESP_ERROR_CHECK(esp_vfs_register("/device", &vfs_devicefs, NULL));
-  */
 }
 
 /*  Check the type of Filesystem based on pathname.
@@ -96,6 +96,10 @@ vfs_type_t vfs_check_type(char *filename) {
   return vfs_type_error;
 }
 
+/*  Check the type of Filesystem based on pathname.
+ *  Returns a string corresponding to the filesystem type.
+ *  We have to redefine our prototype to get around an Arduino compiler quirk.
+ */
 char *vfs_check_type_string(char *filename) {
   // Check if this path is the VFS root.
   if (strcmp(filename, "/") == 0) {
@@ -130,9 +134,11 @@ char *vfs_check_type_string(char *filename) {
   return "error";
 }
 
+/*
+ * Change the current working directory for this task.
+ */
 char *vfs_change_directory(char *path) {
   // TODO: Handle irritating edge cases, like a user putting two slashes in the middle of a path.
-  char strres[64];
   ps_tbl_entry_t *ps = getps();
 
   // No arguments, so just return to the root directory.
@@ -171,7 +177,10 @@ char *vfs_change_directory(char *path) {
 //char *join_paths(char *left, char *right) {
 //}
 
-// Save-image and load-image
+/* 
+ * Save-image and load-image code from uLisp.
+ * This will need to be mostly rewritten.
+ */
 
 #if defined(sdcardsupport)
 void SDWriteInt(File file, int data) {
