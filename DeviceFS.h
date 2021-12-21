@@ -11,6 +11,7 @@
 #include <vector>
 
 // This contains the function pointers for a particular driver's necessary functions.
+// These map to the function pointers required by the ESP32 VFS Module.
 typedef struct device_driver_t {
   int (*open)(const char *, int, int);
   int (*fstat)(int, struct stat *);

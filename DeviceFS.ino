@@ -8,18 +8,17 @@
 
 /* 
  * DeviceFS Return Status Checker.
- * DeviceFS functions return ints or int-like types, so these return codes get typecasted.
+ * DeviceFS functions return ints or int-like types.
  * The assumption is that 0 returns will always be success, positive numbers will always be  
  *   success but with extra information, and negative numbers will always be a failure code.
- * To check if a return code is a DeviceFS status or a downstream status, you can give it
+ * To check if a return code is a DeviceFS status or a downstream driver status, you can give it
  *   as an (int) to devicefs_check_status. This function will return one of the predefined status
  *   codes, and that code will be devicefs_status_downstream if the input is outside of those values,
- *   so you can know to check it with some other function, or it will be devicefs_status_invalid
- *   if the code is within the -127 to 0 code space reserved for DeviceFS statuses but isn't
- *   defined.
+ *   so you can know to check it with some other specialized function, or else it will be
+ *   devicefs_status_invalid if the code is within the -127 to 0 code space reserved for DeviceFS
+ *   statuses but isn't defined.
  * To see the list of statuses, check the devicefs_status_t enum.
  * The wisdom of this method is still being considered.
- * 
  */
 devicefs_status_t devicefs_check_status(int status) {
   if (status > 0 or status <= -127) {
