@@ -16,7 +16,7 @@ typedef struct device_driver_t {
   int (*open)(const char *, int, int);
   int (*fstat)(int, struct stat *);
   int (*stat)(const char *, struct stat *);
-  off_t (*lseek)(int, void *, size_t)
+  off_t (*lseek)(int, void *, size_t);
   int (*close)(int);
   ssize_t (*read)(int, void *, size_t);
   ssize_t (*write)(int, const void *, size_t);
@@ -67,9 +67,6 @@ typedef struct devicefs_file_t {
 
 // This is the File Table which contains all extant file descriptors, mapped by filename.
 std::map<const char *, devicefs_file_t *> devicefs_file_table;
-
-// This is the File Handle Table, which contains all open filenames mapped by their handles.
-std::map<int, const char *> devicefs_handle_table;
 
 // DeviceFS status checker.
 devicefs_status_t devicefs_check_status(int status);

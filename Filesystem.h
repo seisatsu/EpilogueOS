@@ -6,6 +6,8 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
+#include <map>
+
 #define FD_SETSIZE 256
 #include <esp_vfs.h>
 
@@ -31,6 +33,13 @@ typedef enum vfs_mode_t {
   vfs_mode_rw,
   vfs_mode_a,
 };
+
+/*typedef union vfs_file_t {
+  devicefs_file_t devicefs_file;
+};*/
+
+// This is the File Handle Table, which contains all open filenames mapped by their handles.
+std::map<int, const char *> vfs_handle_table;
 
 // EEPROM FS Definitions
 

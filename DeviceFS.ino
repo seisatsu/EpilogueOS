@@ -5,6 +5,7 @@
 */
 
 #include "DeviceFS.h"
+#include "Filesystem.h"
 
 /* 
  * DeviceFS Return Status Checker.
@@ -158,7 +159,7 @@ int vfs_devicefs_open(const char *filename, int flags, int mode) {
 
   // Increment the last file handle ID, and then prepare and register a file handle.
   vfs_last_handle++;
-  devicefs_handle_table[vfs_last_handle] = filename;
+  vfs_handle_table[vfs_last_handle] = filename;
   devicefs_file_table[filename]->handles.push_back(vfs_last_handle);
 
   // Return the file handle.
@@ -176,12 +177,12 @@ int vfs_devicefs_fstat(int fd, struct stat *st) {
   char filename[64];
   
   // Make sure this file handle is valid. Otherwise, fail.
-  if (devicefs_handle_table.find(fd) == devicefs_handle_table.end()) {
+  if (vfs_handle_table.find(fd) == vfs_handle_table.end()) {
     return (int)devicefs_status_invalid_file_handle;
   }
 
   // Copy the handle's corresponding filename into our string buffer.
-  strcpy(filename, devicefs_handle_table[fd]);
+  strcpy(filename, vfs_handle_table[fd]);
 
   // If we can't find a file with this filename in the File Table, fail.
   if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
@@ -229,12 +230,12 @@ off_t vfs_devicefs_lseek(int fd, void *dst, size_t size) {
   char filename[64];
   
   // Make sure this file handle is valid. Otherwise, fail.
-  if (devicefs_handle_table.find(fd) == devicefs_handle_table.end()) {
+  if (vfs_handle_table.find(fd) == vfs_handle_table.end()) {
     return (off_t)devicefs_status_invalid_file_handle;
   }
 
   // Copy the handle's corresponding filename into our string buffer.
-  strcpy(filename, devicefs_handle_table[fd]);
+  strcpy(filename, vfs_handle_table[fd]);
 
   // If we can't find a file with this filename in the File Table, fail.
   if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
@@ -260,12 +261,12 @@ int vfs_devicefs_close(int fd) {
   char filename[64];
 
   // Make sure this file handle is valid. Otherwise, fail.
-  if (devicefs_handle_table.find(fd) == devicefs_handle_table.end()) {
+  if (vfs_handle_table.find(fd) == vfs_handle_table.end()) {
     return (int)devicefs_status_invalid_file_handle;
   }
 
   // Copy the handle's corresponding filename into our string buffer.
-  strcpy(filename, devicefs_handle_table[fd]);
+  strcpy(filename, vfs_handle_table[fd]);
 
   // If we can't find a file with this filename in the File Table, fail.
   if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
@@ -284,7 +285,7 @@ int vfs_devicefs_close(int fd) {
   }
 
   // Destroy the file handle.
-  devicefs_handle_table.erase(fd);
+  vfs_handle_table.erase(fd);
   devicefs_file_table[filename]->handles.erase(std::remove(devicefs_file_table[filename]->handles.begin(), 
     devicefs_file_table[filename]->handles.end(), fd), devicefs_file_table[filename]->handles.end());
 
@@ -302,12 +303,12 @@ ssize_t vfs_devicefs_read(int fd, void *dst, size_t size) {
   char filename[64];
   
   // Make sure this file handle is valid. Otherwise, fail.
-  if (devicefs_handle_table.find(fd) == devicefs_handle_table.end()) {
+  if (vfs_handle_table.find(fd) == vfs_handle_table.end()) {
     return (ssize_t)devicefs_status_invalid_file_handle;
   }
 
   // Copy the handle's corresponding filename into our string buffer.
-  strcpy(filename, devicefs_handle_table[fd]);
+  strcpy(filename, vfs_handle_table[fd]);
 
   // If we can't find a file with this filename in the File Table, fail.
   if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
@@ -334,12 +335,12 @@ ssize_t vfs_devicefs_write(int fd, const void *data, size_t size) {
   char filename[64];
   
   // Make sure this file handle is valid. Otherwise, fail.
-  if (devicefs_handle_table.find(fd) == devicefs_handle_table.end()) {
+  if (vfs_handle_table.find(fd) == vfs_handle_table.end()) {
     return (ssize_t)devicefs_status_invalid_file_handle;
   }
 
   // Copy the handle's corresponding filename into our string buffer.
-  strcpy(filename, devicefs_handle_table[fd]);
+  strcpy(filename, vfs_handle_table[fd]);
 
   // If we can't find a file with this filename in the File Table, fail.
   if (devicefs_file_table.find(filename) == devicefs_file_table.end()) {
