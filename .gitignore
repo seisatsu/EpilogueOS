@@ -1,1 +1,4 @@
-/bin/__pycache__
+bin/__pycache__
+components/
+cmake-build-debug/
+.idea/
