@@ -5,7 +5,7 @@ arduino=~/Source/arduino-1.8.16
 arduino_ide_version=10816
 dot_arduino=~/.arduino15
 libraries=~/Arduino/libraries
-malkuth=~/Source/MalkuthOS
+epilogue=~/Source/EpilogueOS
 
 esp32=$dot_arduino/packages/esp32
 
@@ -48,4 +48,4 @@ $arduino/arduino-builder \
     -prefs=runtime.tools.mkspiffs-$mkspiffs_version.path=$esp32/tools/mkspiffs/$mkspiffs_version \
     -prefs=runtime.tools.mklittlefs.path=$esp32/tools/mklittlefs/$mklittlefs_version \
     -prefs=runtime.tools.mklittlefs-$mklittlefs_version.path=$esp32/tools/mklittlefs/$mklittlefs_version \
-    $malkuth/MalkuthOS.ino
+    $epilogue/EpilogueOS.ino

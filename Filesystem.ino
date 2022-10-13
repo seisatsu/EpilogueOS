@@ -1,4 +1,4 @@
-/* MalkuthOS Version 0.0.1
+/* EpilogueOS Version 0.0.1
    Sei Satzparad and Paul Merrill - 2022
 
    Licensed under the MIT license: https://opensource.org/licenses/MIT

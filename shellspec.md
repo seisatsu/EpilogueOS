@@ -1,4 +1,4 @@
-MalkuthOS Shell Specification v1
+EpilogueOS Shell Specification v1
 ================================
 
 Process Management

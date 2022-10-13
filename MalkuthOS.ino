@@ -1,7 +1,7 @@
 /* uLisp ESP Version 4.0b - www.ulisp.com
    David Johnson-Davies - www.technoblogy.com - 20th October 2021
 
-   MalkuthOS Version 0.0.1
+   EpilogueOS Version 0.0.1
    Sei Satzparad and Paul Merrill - 2022
 
    Licensed under the MIT license: https://opensource.org/licenses/MIT
@@ -32,7 +32,7 @@
 #include <WiFi.h>
 #endif
 
-// MalkuthOS Includes
+// EpilogueOS Includes
 // #include <Arduino_FreeRTOS.h>
 #include "Filesystem.h"
 #include "DeviceFS.h"
@@ -6255,7 +6255,7 @@ void taskrepl(void *pvParameters) {
 
 void loop() {}
 
-// MalkuthOS Internal Functions
+// EpilogueOS Internal Functions
 
 void spawnshell() {
   TaskHandle_t xHandle = NULL;
@@ -6290,7 +6290,7 @@ bool startswith(const char *a, const char *b) {
   return 0;
 }
 
-// MalkuthOS Lisp Functions
+// EpilogueOS Lisp Functions
 
 object *fn_pslist(object *args, object *env) {
   (void)env;

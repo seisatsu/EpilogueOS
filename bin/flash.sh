@@ -24,8 +24,8 @@ python3 \
     0xe000 \
     $esp32/hardware/esp32/$esp32_version/tools/partitions/boot_app0.bin \
     0x1000 \
-    $build_path/MalkuthOS.ino.bootloader.bin \
+    $build_path/EpilogueOS.ino.bootloader.bin \
     0x10000 \
-    $build_path/MalkuthOS.ino.bin \
+    $build_path/EpilogueOS.ino.bin \
     0x8000 \
-    $build_path/MalkuthOS.ino.partitions.bin
+    $build_path/EpilogueOS.ino.partitions.bin
