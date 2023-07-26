@@ -19,3 +19,5 @@ def mainloop():
             print("UNKNOWN COMMAND")
             continue
 
+
+mainloop()

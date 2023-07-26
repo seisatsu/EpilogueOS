@@ -1,8 +1,14 @@
+from copy import copy
+
 NAME = "env"
 
 def ENTRY(env, args):
     if not args:
-        print(env)
+        env_temp = copy(env)
+        for e in env:
+            if e.startswith("\x00"):
+                del env_temp[e]
+        print(env_temp)
     elif len(args) == 1:
         if args[0] in env:
             print(env[args[0]])

@@ -14,6 +14,8 @@ class CommandLoader:
             split_filename = item.split(".")
             if len(split_filename) > 1 and split_filename[1] == "py":
                 self.cmdlist.append(split_filename[0])
+        
+        self.env["\x00cmdlist"] = self.cmdlist
     
     def __contains__(self, cmd_name):
         return cmd_name in self.cmdlist
