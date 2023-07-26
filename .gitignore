@@ -1,4 +1,2 @@
-.replit
-replit.nix
-bin/__pycache__
-.ccls-cache/
+__pycache__
+cmd/__pycache__
