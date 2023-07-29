@@ -7,7 +7,7 @@ class CommandLoader:
         self.cmdlist = []
         self.loaded_modules = {}
         
-        all_files_list = listdir("./cmd")
+        all_files_list = listdir("./bin")
         for item in all_files_list:
             if item == "__init__.py":
                 continue
@@ -16,6 +16,7 @@ class CommandLoader:
                 self.cmdlist.append(split_filename[0])
         
         self.env["\x00cmdlist"] = self.cmdlist
+        self.env["\x00cwd"] = "/"
     
     def __contains__(self, cmd_name):
         return cmd_name in self.cmdlist
@@ -30,7 +31,7 @@ class CommandLoader:
         if cmd_name in self.loaded_modules:
             return self.loaded_modules[cmd_name]
         elif cmd_name in self.cmdlist:
-            self.loaded_modules[cmd_name] = getattr(__import__("cmd."+cmd_name), cmd_name)
+            self.loaded_modules[cmd_name] = getattr(__import__("bin."+cmd_name), cmd_name)
             return self.loaded_modules[cmd_name]
         else:
             return None

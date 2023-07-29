@@ -1,4 +1,4 @@
-from cmd import CommandLoader
+from bin import CommandLoader
 
 
 ENV = {}
